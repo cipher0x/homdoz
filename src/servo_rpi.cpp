@@ -221,7 +221,7 @@ int servo::move(int toAngle)
 {
   if(pin_set)
   {
-    for(int i = 0; i != 20; i++)
+    for(int i = 0; i != 5; i++)
     {
       send_pwm_pulse(toAngle);
     }
