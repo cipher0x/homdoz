@@ -1,3 +1,5 @@
+.PHONY: clean remote_clean sync remote install
+	
 CC := g++ # This is the main compiler
 # CC := clang --analyze # and comment out the linker last line for sanity
 SRCDIR := src
@@ -5,7 +7,7 @@ BUILDDIR := build
 BUILDDIRICS := build/ics
 TARGET := build/homdoz
 CWD := $(shell pwd)
-BUILD_SERVER := 192.168.1.15
+BUILD_SERVER := 10.0.10.15
 
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -26,10 +28,14 @@ clean:
 		@echo " Cleaning...";
 		@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
+remote_clean:
+		@echo "Remote Cleaning $(BUILD_SERVER)...";
+		ssh -C $(BUILD_SERVER) "cd $(CWD) && make clean"
+
 sync:
 		rsync -r $(CWD) $(BUILD_SERVER):~/code
-# Tests
+
+remote: remote_clean sync
+		ssh -C $(BUILD_SERVER) "cd $(CWD) && make"
+
 install:
-
-
-.PHONY: clean
